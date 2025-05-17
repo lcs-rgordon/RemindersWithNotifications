@@ -96,11 +96,19 @@
 		81DE69D32DD89B2900315C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				81DE69DA2DD89FEC00315C5A /* SetReminderView.swift */,
-				81DE69D82DD89EC300315C5A /* ReminderView.swift */,
+				81DE69DC2DD8BB1900315C5A /* Helpers */,
 				81DE69CA2DD89B1400315C5A /* RemindersListView.swift */,
+				81DE69DA2DD89FEC00315C5A /* SetReminderView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		81DE69DC2DD8BB1900315C5A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				81DE69D82DD89EC300315C5A /* ReminderView.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
