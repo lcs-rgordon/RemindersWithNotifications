@@ -38,4 +38,5 @@ struct ReminderView: View {
         ReminderView(currentItem: .constant(firstItem))
         ReminderView(currentItem: .constant(secondItem))
     }
+    .environment(RemindersListViewModel())
 }
