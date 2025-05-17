@@ -35,11 +35,4 @@ class RemindersListViewModel {
 
     }
     
-    func revise(_ reminder: Reminder) {
-        
-//        reminders.
-        
-    }
-    
-    
 }

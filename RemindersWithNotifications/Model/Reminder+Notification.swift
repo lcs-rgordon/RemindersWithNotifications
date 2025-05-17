@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Reminder: Identifiable, Codable, Hashable, Equatable {
+@Observable
+class Reminder: Identifiable, Hashable, Equatable {
 
     // MARK: Stored properties
     var id: UUID
@@ -24,13 +25,25 @@ struct Reminder: Identifiable, Codable, Hashable, Equatable {
         }
     }
     
+    // MARK: Initializer(s)
+    init(id: UUID, title: String, done: Bool, notification: Notification? = nil) {
+        self.id = id
+        self.title = title
+        self.done = done
+        self.notification = notification
+    }
+    
     // MARK: Function(s)
     static func == (lhs: Reminder, rhs: Reminder) -> Bool {
         lhs.id == rhs.id
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
-struct Notification: Identifiable, Codable, Hashable, Equatable {
+struct Notification: Identifiable, Hashable, Equatable {
     
     // MARK: Stored properties
     var id: UUID

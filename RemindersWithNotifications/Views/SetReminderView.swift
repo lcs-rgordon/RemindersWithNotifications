@@ -47,7 +47,7 @@ struct SetReminderView: View {
                         } else {
                             
                             // Save the changes to the existing reminder
-
+                            reminder!.title = title
                             
                         }
                         
