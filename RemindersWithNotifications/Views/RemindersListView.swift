@@ -14,7 +14,8 @@ struct RemindersListView: View {
     // The view model
     @State private var viewModel = RemindersListViewModel()
     
-    // Is the sheet to add or edit reminder item showing right now?
+    // Is the sheet that shows the view to allow for adding
+    // or editing a reminder being presented?
     @State private var presentingSheet = false
     
     // The currently selected reminder
@@ -44,7 +45,7 @@ struct RemindersListView: View {
                     ) { $reminder in
                         
                         ReminderView(
-                            currentItem: $reminder,
+                            reminder: $reminder,
                             presentingSheet: $presentingSheet,
                             selectedReminder: $selectedReminder
                         )
@@ -54,8 +55,8 @@ struct RemindersListView: View {
             // When presentingNewItemSheet becomes true, this shows
             // the view within the sheet
             .sheet(isPresented: $presentingSheet) {
-                EditReminderView(
-                    currentReminder: $selectedReminder,
+                SetReminderView(
+                    reminder: $selectedReminder,
                     showSheet: $presentingSheet
                 )
                 // The word "detent" means to hold something in place

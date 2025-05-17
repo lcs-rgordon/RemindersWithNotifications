@@ -1,5 +1,5 @@
 //
-//  EditReminderView.swift
+//  SetReminderView.swift
 //  RemindersWithNotifications
 //
 //  Created by Russell Gordon on 2025-05-17.
@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct EditReminderView: View {
+struct SetReminderView: View {
     
     // MARK: Stored properties
     
     // The reminder sent for editing
-    @Binding var currentReminder: Reminder?
+    @Binding var reminder: Reminder?
     
-    // The revised title
+    // The reminder's title
     @State private var title = ""
     
-    // The revised notification
+    // The reminder's notification, if it exists
     @State private var notification: Notification?
     
     // Access the view model through the environment
@@ -66,7 +66,7 @@ struct EditReminderView: View {
                 ToolbarItem(placement: .automatic) {
                     Button {
                         showSheet = false
-                        currentReminder = nil
+                        reminder = nil
                     } label: {
                         Text("Done")
                             .bold()
@@ -76,7 +76,7 @@ struct EditReminderView: View {
             }
             .onAppear {
                 // Populate sheet with existing reminder if one was supplied
-                if let currentReminder = currentReminder {
+                if let currentReminder = reminder {
                     editingExistingReminder = true
                     title = currentReminder.title
                     notification = currentReminder.notification
@@ -102,8 +102,8 @@ struct EditReminderView: View {
             Text("View the sheet is connected to")
         }
         .sheet(isPresented: $presentingNewReminderSheet) {
-            EditReminderView(
-                currentReminder: $currentReminder,
+            SetReminderView(
+                reminder: $currentReminder,
                 showSheet: $presentingNewReminderSheet
             )
                 // Control size of the sheet when it slides up
@@ -131,8 +131,8 @@ struct EditReminderView: View {
             Text("View the sheet is connected to")
         }
         .sheet(isPresented: $presentingNewReminderSheet) {
-            EditReminderView(
-                currentReminder: $currentReminder,
+            SetReminderView(
+                reminder: $currentReminder,
                 showSheet: $presentingNewReminderSheet
             )
                 // Control size of the sheet when it slides up

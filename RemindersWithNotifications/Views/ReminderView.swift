@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ReminderView: View {
     
-    // Holds a reference to the current to-do item
-    @Binding var currentItem: Reminder
+    // Holds a reference to the current reminder
+    @Binding var reminder: Reminder
     
     // Allow this view to make EditReminderView appear
     @Binding var presentingSheet: Bool
@@ -25,20 +25,20 @@ struct ReminderView: View {
         HStack {
             Label(
                 title: {
-                    TextField("", text: $currentItem.title, axis: .vertical)
+                    TextField("", text: $reminder.title, axis: .vertical)
                 }, icon: {
-                    Image(systemName: currentItem.done == true ? "checkmark.circle" : "circle")
+                    Image(systemName: reminder.done == true ? "checkmark.circle" : "circle")
                         // Tap to mark as done
                         .onTapGesture {
-                            currentItem.done.toggle()
+                            reminder.done.toggle()
                         }
                 }
             )
             
-            Image(systemName: currentItem.notificationSet ? "bell.fill" : "bell.slash")
-                .foregroundStyle(currentItem.notificationSet ? .yellow : .gray)
+            Image(systemName: reminder.notificationSet ? "bell.fill" : "bell.slash")
+                .foregroundStyle(reminder.notificationSet ? .yellow : .gray)
                 .onTapGesture {
-                    selectedReminder = currentItem
+                    selectedReminder = reminder
                     presentingSheet = true
                 }
 
