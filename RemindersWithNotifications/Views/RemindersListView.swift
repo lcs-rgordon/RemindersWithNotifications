@@ -14,8 +14,11 @@ struct RemindersListView: View {
     // The view model
     @State private var viewModel = RemindersListViewModel()
     
-    // Is the sheet to add a new reminder item showing right now?
-    @State private var presentingNewReminderSheet = false
+    // Is the sheet to add or edit reminder item showing right now?
+    @State private var presentingSheet = false
+    
+    // The currently selected reminder
+    @State private var selectedReminder: Reminder?
     
     // MARK: Computed properties
     var body: some View {
@@ -34,17 +37,27 @@ struct RemindersListView: View {
 
                 } else {
                     
-                    List($viewModel.reminders) { $reminder in
+                    List(
+                        $viewModel.reminders,
+                        id: \.self,
+                        selection: $selectedReminder
+                    ) { $reminder in
                         
-                        // If no, just show the text of the reminder
-                        ReminderView(currentItem: $reminder)
+                        ReminderView(
+                            currentItem: $reminder,
+                            presentingSheet: $presentingSheet,
+                            selectedReminder: $selectedReminder
+                        )
                     }
                 }
             }
             // When presentingNewItemSheet becomes true, this shows
             // the view within the sheet
-            .sheet(isPresented: $presentingNewReminderSheet) {
-                NewReminderView(showSheet: $presentingNewReminderSheet)
+            .sheet(isPresented: $presentingSheet) {
+                EditReminderView(
+                    currentReminder: $selectedReminder,
+                    showSheet: $presentingSheet
+                )
                 // The word "detent" means to hold something in place
                 // Here we ask for the size of the sheet to take up
                 // 15% of the height of the existing window
@@ -54,7 +67,7 @@ struct RemindersListView: View {
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
-                        presentingNewReminderSheet = true
+                        presentingSheet = true
                     } label: {
                         Image(systemName: "plus")
                     }

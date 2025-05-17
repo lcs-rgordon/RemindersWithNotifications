@@ -12,6 +12,12 @@ struct ReminderView: View {
     // Holds a reference to the current to-do item
     @Binding var currentItem: Reminder
     
+    // Allow this view to make EditReminderView appear
+    @Binding var presentingSheet: Bool
+
+    // Allow this view to set the selected reminder in the list
+    @Binding var selectedReminder: Reminder?
+
     // Access the view model through the environment
     @Environment(RemindersListViewModel.self) var viewModel
     
@@ -29,14 +35,17 @@ struct ReminderView: View {
                 }
             )
             
+            Image(systemName: currentItem.notificationSet ? "bell.fill" : "bell.slash")
+                .foregroundStyle(currentItem.notificationSet ? .yellow : .gray)
+                .onTapGesture {
+                    selectedReminder = currentItem
+                    presentingSheet = true
+                }
+
         }
     }
 }
 
 #Preview {
-    List {
-        ReminderView(currentItem: .constant(firstItem))
-        ReminderView(currentItem: .constant(secondItem))
-    }
-    .environment(RemindersListViewModel())
+    RemindersListView()
 }
