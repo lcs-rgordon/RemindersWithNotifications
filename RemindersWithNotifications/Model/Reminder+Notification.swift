@@ -27,7 +27,7 @@ struct Notification: Identifiable, Codable {
 
 let firstItem = Reminder(id: UUID(), title: "Study for Chemisty quiz", done: false)
 
-let secondItem = Reminder(id: UUID(), title: "Finish Computer Science assignment", done: true)
+let secondItem = Reminder(id: UUID(), title: "Finish Computer Science task", done: true)
 
 let thirdItem = Reminder(id: UUID(), title: "Go for a run around campus", done: false)
 
