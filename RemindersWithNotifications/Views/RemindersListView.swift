@@ -19,7 +19,7 @@ struct RemindersListView: View {
     
     // The currently selected reminder
     @State private var selectedReminder: Reminder?
-    
+        
     // MARK: Computed properties
     var body: some View {
         
@@ -73,7 +73,7 @@ struct RemindersListView: View {
                     }
                 }
             }
-            .navigationTitle("To do")
+            .navigationTitle("Reminders")
             
         }
         .environment(viewModel)
