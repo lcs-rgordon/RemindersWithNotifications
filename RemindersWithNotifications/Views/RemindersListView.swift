@@ -62,7 +62,7 @@ struct RemindersListView: View {
                 // The word "detent" means to hold something in place
                 // Here we ask for the size of the sheet to take up
                 // 15% of the height of the existing window
-                    .presentationDetents([.fraction(0.15)])
+                    .presentationDetents([.fraction(0.35)])
             }
             // Show a button to allow new to-do items to be added
             .toolbar {

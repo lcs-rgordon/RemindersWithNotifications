@@ -47,7 +47,7 @@ struct Notification: Identifiable, Hashable, Equatable {
     
     // MARK: Stored properties
     var id: UUID
-    var scheduledFor: Date?
+    var scheduledFor: Date
     
     // MARK: Function(s)
     static func == (lhs: Notification, rhs: Notification) -> Bool {

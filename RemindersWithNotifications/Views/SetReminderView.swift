@@ -17,9 +17,15 @@ struct SetReminderView: View {
     // The reminder's title
     @State private var title = ""
     
+    // Whether to be notified
+    @State private var withNotification: Bool = false
+    
+    // Date for notification to appear
+    @State private var notificationDate = Date()
+    
     // The reminder's notification, if it exists
     @State private var notification: Notification?
-    
+
     // Access the view model through the environment
     @Environment(RemindersListViewModel.self) var viewModel
     
@@ -33,32 +39,59 @@ struct SetReminderView: View {
     var body: some View {
         NavigationView {
             VStack {
-                HStack {
-                    TextField("Enter a reminder", text: $title)
+                
+                TextField("Enter a reminder", text: $title)
+                    .textFieldStyle(.roundedBorder)
+                
+                Toggle("Notification?", isOn: $withNotification)
+                
+                DatePicker(selection: $notificationDate, in: Date.now...) {
+                    Text("At:")
+                }
+                .disabled(withNotification == false)
+                                
+                Button(editingExistingReminder ? "Save" : "Add") {
                     
-                    Button(editingExistingReminder ? "Save" : "Add") {
+                    if !editingExistingReminder {
                         
-                        if !editingExistingReminder {
-                            // Add reminder
-                            viewModel.createReminder(withTitle: title)
+                        // Add reminder
+                        if withNotification {
                             
-                            // Clear the input field
-                            title = ""
+                            viewModel.createReminder(
+                                withTitle: title,
+                                notification: Notification(
+                                    id: UUID(),
+                                    scheduledFor: notificationDate
+                                )
+                            )
+
                         } else {
-                            
-                            // Save the changes to the existing reminder
-                            reminder!.title = title
-                            
+                            viewModel.createReminder(withTitle: title)
                         }
                         
+                        // Reset input fields
+                        title = ""
+                        withNotification = false
+                        notificationDate = Date()
+                    } else {
+                        
+                        // Save the changes to the existing reminder
+                        reminder!.title = title
+                        
+                        // TODO: Handle updating notifications
+                        // 1. Could have not had notification, now it does
+                        // 2. Could be editing existing notification
+                        // 3. Could be removing existing notification
+                        
                     }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(
-                        title
-                            .trimmingCharacters(in: .whitespacesAndNewlines)
-                            .isEmpty == true
-                    )
+                    
                 }
+                .buttonStyle(.borderedProminent)
+                .disabled(
+                    title
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .isEmpty == true
+                )
 
             }
             .padding(20)
@@ -80,6 +113,13 @@ struct SetReminderView: View {
                     editingExistingReminder = true
                     title = currentReminder.title
                     notification = currentReminder.notification
+                    if let notification = notification {
+                        withNotification = true
+                        notificationDate = currentReminder.notification.scheduledFor
+                    } else {
+                        withNotification = false
+                        notificationDate = Date()
+                    }
                 }
             }
         }
@@ -107,7 +147,7 @@ struct SetReminderView: View {
                 showSheet: $presentingNewReminderSheet
             )
                 // Control size of the sheet when it slides up
-                .presentationDetents([.fraction(0.15), .medium])
+                .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
 
@@ -136,7 +176,7 @@ struct SetReminderView: View {
                 showSheet: $presentingNewReminderSheet
             )
                 // Control size of the sheet when it slides up
-                .presentationDetents([.fraction(0.15), .medium])
+                .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
 

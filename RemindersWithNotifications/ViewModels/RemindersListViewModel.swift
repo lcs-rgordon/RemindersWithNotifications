@@ -21,15 +21,18 @@ class RemindersListViewModel {
     }
     
     // MARK: Functions
-    func createReminder(withTitle title: String) {
+    func createReminder(withTitle title: String, notification: Notification? = nil) {
         
         // Create the new to-do item instance
         // NOTE: The id will be nil for now
         let newReminder = Reminder(
             id: UUID(),
             title: title,
-            done: false
+            done: false,
+            notification: notification
         )
+        
+        debugPrint(newReminder.notification?.scheduledFor.formatted())
         
         self.reminders.append(newReminder)
 
