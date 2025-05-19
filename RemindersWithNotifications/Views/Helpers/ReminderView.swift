@@ -64,13 +64,22 @@ struct ReminderView: View {
                 }
             )
             
-            Image(systemName: notificationIconName)
-                .foregroundStyle(notificationColor)
-                .onTapGesture {
-                    Logger.viewCycle.info("ReminderView: Showing sheet to set notification details for reminder with id \(reminder.id).")
-                    selectedReminder = reminder
-                    presentingSheet = true
+            VStack(alignment: .trailing) {
+
+                Image(systemName: notificationIconName)
+                    .foregroundStyle(notificationColor)
+                    .onTapGesture {
+                        Logger.viewCycle.info("ReminderView: Showing sheet to set notification details for reminder with id \(reminder.id).")
+                        selectedReminder = reminder
+                        presentingSheet = true
+                    }
+
+                if reminder.notificationSet {
+                    Text(reminder.notification!.scheduledFor.formatted(.relative(presentation: .numeric)))
+                        .font(.caption)
                 }
+                
+            }
 
         }
     }
