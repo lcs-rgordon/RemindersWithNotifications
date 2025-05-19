@@ -55,71 +55,7 @@ struct SetReminderView: View {
                 .disabled(withNotification == false)
                                 
                 Button(editingExistingReminder ? "Save" : "Add") {
-                    
-                    if !editingExistingReminder {
-                        
-                        // Add reminder
-                        if withNotification {
-
-                            Logger.viewCycle.info("SetReminderView: About to create NEW reminder with a notification.")
-
-                            viewModel.createReminder(
-                                withTitle: title,
-                                notification: Notification(
-                                    id: UUID(),
-                                    scheduledFor: notificationDate
-                                )
-                            )
-
-                        } else {
-
-                            Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
-
-                            viewModel.createReminder(withTitle: title)
-                        }
-                        
-                        // Reset input fields
-                        title = ""
-                        withNotification = false
-                        notificationDate = Date()
-                    } else {
-                        
-                        // Save the changes to the existing reminder
-                        reminder!.title = title
-                        
-                        Logger.viewCycle.info("SetReminderView: Updating existing reminder.")
-                        
-                        // TODO: Handle updating notifications
-                        // 1. Could have not had notification, now it does
-                        // 2. Could be editing existing notification
-                        // 3. Could be removing existing notification
-                        if !hadPriorNotification {
-                            
-                            Logger.viewCycle.info("SetReminderView: Existing reminder did NOT previously have a notification.")
-                            
-                            // 1. Adding new notification
-                            Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
-
-                        } else {
-                            
-                            Logger.viewCycle.info("SetReminderView: Existing reminder previously had a notification.")
-
-                            if withNotification {
-                                
-                                // 2. Editing existing notification
-                                Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
-
-                            } else {
-
-                                // 3. Removing existing notification
-                                Logger.viewCycle.info("SetReminderView: We are removing notification.")
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
+                    setReminder()
                 }
                 .buttonStyle(.borderedProminent)
                 // Don't allow reminder to be saved or added when it is empty
@@ -169,7 +105,75 @@ struct SetReminderView: View {
 
 
     }
-        
+    
+    // MARK: Function(s)
+    func setReminder() {
+        if !editingExistingReminder {
+            
+            // Add reminder
+            if withNotification {
+
+                Logger.viewCycle.info("SetReminderView: About to create NEW reminder with a notification.")
+
+                viewModel.createReminder(
+                    withTitle: title,
+                    notification: Notification(
+                        id: UUID(),
+                        scheduledFor: notificationDate
+                    )
+                )
+
+            } else {
+
+                Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
+
+                viewModel.createReminder(withTitle: title)
+            }
+            
+            // Reset input fields
+            title = ""
+            withNotification = false
+            notificationDate = Date()
+        } else {
+            
+            // Save the changes to the existing reminder's title
+            reminder!.title = title
+            
+            Logger.viewCycle.info("SetReminderView: Updating existing reminder.")
+            
+            // TODO: Handle updating notifications
+            // 1. Could have not had notification, now it does
+            // 2. Could be editing existing notification
+            // 3. Could be removing existing notification
+            if !hadPriorNotification {
+                
+                Logger.viewCycle.info("SetReminderView: Existing reminder did NOT previously have a notification.")
+                
+                // 1. Adding new notification
+                Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
+
+            } else {
+                
+                Logger.viewCycle.info("SetReminderView: Existing reminder previously had a notification.")
+
+                if withNotification {
+                    
+                    // 2. Editing existing notification
+                    Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
+
+                } else {
+
+                    // 3. Removing existing notification
+                    Logger.viewCycle.info("SetReminderView: We are removing notification.")
+                    
+                }
+                
+            }
+            
+        }
+
+    }
+    
 }
 
 // When it is a new reminder being created
