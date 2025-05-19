@@ -7,6 +7,13 @@
 
 import Foundation
 
+// NOTE: In order to keep track of which reminder is currently
+//       selected in the list of reminders, the Reminder
+//       type must conform to Hashable and Equatable.
+
+// NOTE: Since properties of a reminder will change (and we want
+//       this to be reflected in the user interface) each reminder
+//       must be an observable class, rather than a structure
 @Observable
 class Reminder: Identifiable, Hashable, Equatable {
 
@@ -34,40 +41,16 @@ class Reminder: Identifiable, Hashable, Equatable {
     }
     
     // MARK: Function(s)
+    
+    // Required for Equatable conformance
     static func == (lhs: Reminder, rhs: Reminder) -> Bool {
         lhs.id == rhs.id
     }
     
+    // Required for Hashable conformance
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-}
-
-@Observable
-class Notification: Identifiable, Hashable, Equatable {
-    
-    // MARK: Stored properties
-    var id: UUID
-    var scheduledFor: Date
-    var successfullyCreated: Bool = false
-    
-    // MARK: Initializer(s)
-    init(id: UUID = UUID(), scheduledFor: Date, successfullyCreated: Bool = false) {
-        self.id = id
-        self.scheduledFor = scheduledFor
-        self.successfullyCreated = successfullyCreated
-    }
-    
-    // MARK: Function(s)
-    static func == (lhs: Notification, rhs: Notification) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-
 }
 
 // Example data

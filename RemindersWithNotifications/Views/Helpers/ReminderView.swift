@@ -21,9 +21,6 @@ struct ReminderView: View {
     // Allow this view to set the selected reminder in the list
     @Binding var selectedReminder: Reminder?
 
-    // Access the view model through the environment
-    @Environment(RemindersListViewModel.self) var viewModel
-    
     // MARK: Computed properties
     var notificationIconName: String {
         if reminder.notificationSet {
