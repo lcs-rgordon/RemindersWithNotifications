@@ -158,13 +158,13 @@ struct SetReminderView: View {
 
                 if withNotification {
                     
-                    // 2. Editing existing notification
+                    // Editing existing notification
                     Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
                     updateNotificationFor(existingReminder: reminder!)
 
                 } else {
 
-                    // 3. Removing existing notification
+                    // Removing existing notification
                     Logger.viewCycle.info("SetReminderView: We are removing notification.")
                     
                     // First remove any notification(s) that exist for this reminder
