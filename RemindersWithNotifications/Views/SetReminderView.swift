@@ -57,12 +57,13 @@ struct SetReminderView: View {
                 TextField("Enter a reminder", text: $title)
                     .textFieldStyle(.roundedBorder)
                 
-                Toggle("Notification?", isOn: $withNotification)
-                
-                DatePicker(selection: $notificationDate, in: Date.now...) {
-                    Text("At:")
+                Toggle("Receive notification?", isOn: $withNotification.animation())
+
+                if withNotification {
+                    DatePicker(selection: $notificationDate, in: Date.now...) {
+                        Text("At:")
+                    }
                 }
-                .disabled(withNotification == false)
                                 
                 Button(editingExistingReminder ? "Save" : "Add") {
                     setReminder()
@@ -75,6 +76,7 @@ struct SetReminderView: View {
                         .isEmpty == true
                 )
 
+                Spacer()
             }
             .padding(20)
             .toolbar {
