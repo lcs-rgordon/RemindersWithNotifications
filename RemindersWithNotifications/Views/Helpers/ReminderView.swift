@@ -74,6 +74,7 @@ struct ReminderView: View {
                         presentingSheet = true
                     }
 
+                // Show a relative date/time for when the notification will appear (e.g.: 5 minutes, 2 minutes, 10 seconds ago...)
                 if reminder.notificationSet {
                     Text(reminder.notification!.scheduledFor.formatted(.relative(presentation: .numeric)))
                         .font(.caption)
