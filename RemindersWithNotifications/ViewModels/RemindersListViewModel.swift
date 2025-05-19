@@ -23,7 +23,7 @@ class RemindersListViewModel {
     }
     
     // MARK: Functions
-    func createReminder(withTitle title: String, notification: Notification? = nil) {
+    func createReminder(withTitle title: String, andNotificationAt providedDateAndTime: Date? = nil) {
         
         // Create the new to-do item instance
         // NOTE: The id will be nil for now
@@ -31,7 +31,7 @@ class RemindersListViewModel {
             id: UUID(),
             title: title,
             done: false,
-            notification: notification
+            notification: providedDateAndTime == nil ? nil : Notification(id: UUID(), scheduledFor: providedDateAndTime!)
         )
         
         Logger.data.info("RemindersListViewModel: Created new reminder (\(newReminder.title)) \(newReminder.notificationSet ? "WITH" : "WITHOUT") a notification set.")

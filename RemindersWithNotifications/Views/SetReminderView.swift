@@ -117,10 +117,7 @@ struct SetReminderView: View {
 
                 viewModel.createReminder(
                     withTitle: title,
-                    notification: Notification(
-                        id: UUID(),
-                        scheduledFor: notificationDate
-                    )
+                    andNotificationAt: notificationDate
                 )
 
             } else {
