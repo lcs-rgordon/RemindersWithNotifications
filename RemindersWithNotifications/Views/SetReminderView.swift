@@ -175,7 +175,7 @@ struct SetReminderView: View {
                 
                 // 1. Adding new notification
                 Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
-                reminder!.notification = Notification(id: UUID(), scheduledFor: notificationDate)
+                reminder!.notification = Notification(scheduledFor: notificationDate)
                 updateNotificationFor(existingReminder: reminder!)
 
             } else {
@@ -271,7 +271,6 @@ struct SetReminderView: View {
     
     @Previewable @State var presentingNewReminderSheet = true
     @Previewable @State var currentReminder: Reminder? = Reminder(
-        id: UUID(),
         title: "Have a nap",
         done: false
     )

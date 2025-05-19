@@ -26,7 +26,7 @@ class Reminder: Identifiable, Hashable, Equatable {
     }
     
     // MARK: Initializer(s)
-    init(id: UUID, title: String, done: Bool, notification: Notification? = nil) {
+    init(id: UUID = UUID(), title: String, done: Bool, notification: Notification? = nil) {
         self.id = id
         self.title = title
         self.done = done
@@ -52,7 +52,7 @@ class Notification: Identifiable, Hashable, Equatable {
     var successfullyCreated: Bool = false
     
     // MARK: Initializer(s)
-    init(id: UUID, scheduledFor: Date, successfullyCreated: Bool = false) {
+    init(id: UUID = UUID(), scheduledFor: Date, successfullyCreated: Bool = false) {
         self.id = id
         self.scheduledFor = scheduledFor
         self.successfullyCreated = successfullyCreated
@@ -72,11 +72,11 @@ class Notification: Identifiable, Hashable, Equatable {
 
 // Example data
 
-let firstItem = Reminder(id: UUID(), title: "Study for Chemisty quiz", done: false)
+let firstItem = Reminder(title: "Study for Chemisty quiz", done: false)
 
-let secondItem = Reminder(id: UUID(), title: "Finish Computer Science task", done: true)
+let secondItem = Reminder(title: "Finish Computer Science task", done: true)
 
-let thirdItem = Reminder(id: UUID(), title: "Go for a run around campus", done: false)
+let thirdItem = Reminder(title: "Go for a run around campus", done: false)
 
 let exampleItems = [
     
