@@ -57,8 +57,8 @@ struct RemindersListView: View {
             // the view within the sheet
             .sheet(isPresented: $presentingSheet) {
                 SetReminderView(
-                    reminder: $selectedReminder,
-                    showSheet: $presentingSheet
+                    showSheet: $presentingSheet,
+                    reminder: $selectedReminder
                 )
                 // The word "detent" means to hold something in place
                 // Here we ask for the size of the sheet to take up

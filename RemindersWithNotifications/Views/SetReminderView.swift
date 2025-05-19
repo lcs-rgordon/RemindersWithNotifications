@@ -36,9 +36,6 @@ struct SetReminderView: View {
     // Date for notification to appear
     @State private var notificationDate = Date()
     
-    // Access the controller that handles adding, editing, or removing notifications
-    @Environment(NotificationController.self) var notificationContoller
-    
     // Determines whether an error message displaying a problem creating
     // a notification is showing or not
     @State private var showingNotificationsError = false
@@ -139,9 +136,6 @@ struct SetReminderView: View {
                 
                 Logger.viewCycle.info("SetReminderView: New reminder created, now about to try scheduling its notification.")
                 
-                // Try to create the notification for this reminder
-                updateNotificationFor(existingReminder: newlyCreatedReminder)
-
             } else {
 
                 Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
@@ -173,7 +167,6 @@ struct SetReminderView: View {
                 // 1. Adding new notification
                 Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
                 reminder!.notification = Notification(scheduledFor: notificationDate)
-                updateNotificationFor(existingReminder: reminder!)
 
             } else {
                 
@@ -183,7 +176,6 @@ struct SetReminderView: View {
                     
                     // 2. Editing existing notification
                     Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
-                    updateNotificationFor(existingReminder: reminder!)
 
                 } else {
 
@@ -191,7 +183,6 @@ struct SetReminderView: View {
                     Logger.viewCycle.info("SetReminderView: We are removing notification.")
                     
                     // First remove any notification(s) that exist for this reminder
-                    notificationContoller.removeNotifications(for: reminder!)
                     reminder!.notification = nil
 
                 }
@@ -210,32 +201,7 @@ struct SetReminderView: View {
         
         openURL(settingsURL)
     }
-    
-    // Handles updating or creating a notification for a given reminder
-    func updateNotificationFor(existingReminder: Reminder) {
         
-        // First remove any notification(s) that exist for this reminder
-        notificationContoller.removeNotifications(for: existingReminder)
-        
-        // Try to create the notification for this reminder
-        Task {
-            
-            let success = await notificationContoller.addNotification(for: existingReminder)
-            
-            if success {
-                Logger.viewCycle.info("SetReminderView: Successfully updated notification.")
-                existingReminder.notification!.successfullyCreated = true
-                showingNotificationsError = false
-            } else {
-                Logger.viewCycle.info("SetReminderView: Unable to update notification.")
-                existingReminder.notification!.successfullyCreated = false
-                showingNotificationsError = true
-            }
-
-        }
-
-    }
-    
 }
 
 // When it is a new reminder being created
@@ -259,8 +225,6 @@ struct SetReminderView: View {
                 .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
-                // Add instance of the notification controller class to the environment
-                .environment(NotificationController())
 
         }
 }
@@ -289,8 +253,6 @@ struct SetReminderView: View {
                 .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
-                // Add instance of the notification controller class to the environment
-                .environment(NotificationController())
 
         }
 }
