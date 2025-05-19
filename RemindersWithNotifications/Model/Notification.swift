@@ -7,6 +7,9 @@
 
 import Foundation
 
+// NOTE: Since properties of a notification (when it is scheduled for)
+//       will change (and we want this to be reflected in the user interface)
+//       each notification must be an observable class, rather than a structure
 @Observable
 class Notification: Identifiable {
     
