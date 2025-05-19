@@ -12,16 +12,16 @@ struct SetReminderView: View {
     
     // MARK: Stored properties
     
-    // Access the controller that handles adding, editing, or removing notifications
-    @Environment(NotificationController.self) var notificationContoller
-    
-    // The reminder sent for editing
+    // Access the view model through the environment
+    @Environment(RemindersListViewModel.self) var viewModel
+        
+    // The reminder sent for editing (occurs when user clicks the notification bell)
     @Binding var reminder: Reminder?
     
     // The reminder's title
     @State private var title = ""
     
-    // Whether to be notified
+    // Whether user has asked for a notification to go along with this reminder
     @State private var withNotification: Bool = false
     
     // Whether the reminder PREVIOUSLY had a notification
@@ -30,11 +30,8 @@ struct SetReminderView: View {
     // Date for notification to appear
     @State private var notificationDate = Date()
     
-    // The reminder's notification, if it exists
-    @State private var notification: Notification?
-
-    // Access the view model through the environment
-    @Environment(RemindersListViewModel.self) var viewModel
+    // Access the controller that handles adding, editing, or removing notifications
+    @Environment(NotificationController.self) var notificationContoller
     
     // Whether we are editing an existing reminder
     @State private var editingExistingReminder = false
@@ -43,10 +40,10 @@ struct SetReminderView: View {
     // a notification is showing or not
     @State private var showingNotificationsError = false
     
-    // Showing the app’s settings is logic that’s best left out of our view’s body. So, add this new property to get access to opening URLs:
+    // Makes it possible to open the Settings page for this app to allow user to enable notifications, if necessary
     @Environment(\.openURL) var openURL
     
-    // Binding to control whether this sheet
+    // Binding to control whether this sheet is visible or not
     @Binding var showSheet: Bool
     
     // MARK: Computed properties
@@ -92,6 +89,7 @@ struct SetReminderView: View {
                     
                 }
             }
+            // Shows if we are not authorized to create notifications
             .alert("Oops!", isPresented: $showingNotificationsError) {
                 Button("Check Settings", action: showAppSettings)
                 Button("Cancel", role: .cancel) {
@@ -100,15 +98,14 @@ struct SetReminderView: View {
             } message: {
                 Text("There was a problem creating a notification for this reminder. Please check that you have allowed notifications from this app.")
             }
+            // Populate sheet with existing reminder (if one was supplied)
             .onAppear {
-                // Populate sheet with existing reminder if one was supplied
                 Logger.viewCycle.info("SetReminderView: View is appearing.")
                 if let currentReminder = reminder {
                     Logger.viewCycle.info("SetReminderView: Existing reminder is being edited.")
                     editingExistingReminder = true
                     title = currentReminder.title
-                    notification = currentReminder.notification
-                    if let notification = notification {
+                    if let notification = currentReminder.notification {
                         Logger.viewCycle.info("SetReminderView: Existing reminder has a notification scheduled.")
                         withNotification = true
                         hadPriorNotification = true
@@ -205,6 +202,7 @@ struct SetReminderView: View {
 
     }
     
+    // Shows the app's setting page, if requested by the user
     func showAppSettings() {
         guard let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString) else {
             return
@@ -213,6 +211,7 @@ struct SetReminderView: View {
         openURL(settingsURL)
     }
     
+    // Handles updating or creating a notification for a given reminder
     func updateNotificationFor(existingReminder: Reminder) {
         
         // First remove any notification(s) that exist for this reminder
