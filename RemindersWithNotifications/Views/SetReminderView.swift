@@ -125,55 +125,32 @@ struct SetReminderView: View {
     
     // MARK: Function(s)
     func setReminder() {
-        if !editingExistingReminder {
-            
-            // Add reminder
-            if withNotification {
-
-                Logger.viewCycle.info("SetReminderView: About to create NEW reminder with a notification.")
-
-                let newlyCreatedReminder = viewModel.createReminder(
-                    withTitle: title,
-                    andNotificationAt: notificationDate
-                )
-                
-                Logger.viewCycle.info("SetReminderView: New reminder created, now about to try scheduling its notification.")
-                
-                // Try to create the notification for this reminder
-                updateNotificationFor(existingReminder: newlyCreatedReminder)
-
-            } else {
-
-                Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
-
-                let _ = viewModel.createReminder(withTitle: title)
-
-            }
-            
-            // Reset input fields
-            title = ""
-            withNotification = false
-            notificationDate = Date()
-            
-        } else {
+        
+        if editingExistingReminder {
             
             // Save the changes to the existing reminder's title
             reminder!.title = title
             
             Logger.viewCycle.info("SetReminderView: Updating existing reminder.")
             
-            // TODO: Handle updating notifications
-            // 1. Could have not had notification, now it does
-            // 2. Could be editing existing notification
-            // 3. Could be removing existing notification
             if !hadPriorNotification {
                 
                 Logger.viewCycle.info("SetReminderView: Existing reminder did NOT previously have a notification.")
-                
-                // 1. Adding new notification
-                Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
-                reminder!.notification = Notification(scheduledFor: notificationDate)
-                updateNotificationFor(existingReminder: reminder!)
+
+                if withNotification {
+                    
+                    // Add new notification
+                    Logger.viewCycle.info("SetReminderView: Notification requested; about to schedule NEW notification.")
+                    reminder!.notification = Notification(scheduledFor: notificationDate)
+                    updateNotificationFor(existingReminder: reminder!)
+                    hadPriorNotification = true
+
+                } else {
+                    
+                    // Do nothing
+                    Logger.viewCycle.info("SetReminderView: No notification requested, doing nothing.")
+
+                }
 
             } else {
                 
@@ -197,6 +174,37 @@ struct SetReminderView: View {
                 }
                 
             }
+        
+            
+        } else {
+            
+            // Adding new reminder...
+            if withNotification {
+
+                Logger.viewCycle.info("SetReminderView: About to create NEW reminder WITH a notification.")
+
+                let newlyCreatedReminder = viewModel.createReminder(
+                    withTitle: title,
+                    andNotificationAt: notificationDate
+                )
+                
+                Logger.viewCycle.info("SetReminderView: New reminder created, now about to try scheduling its notification.")
+                
+                // Try to create the notification for this reminder
+                updateNotificationFor(existingReminder: newlyCreatedReminder)
+
+            } else {
+
+                Logger.viewCycle.info("SetReminderView: About to create NEW reminder WITHOUT a notification.")
+
+                let _ = viewModel.createReminder(withTitle: title)
+
+            }
+            
+            // Reset input fields
+            title = ""
+            withNotification = false
+            notificationDate = Date()
             
         }
 
