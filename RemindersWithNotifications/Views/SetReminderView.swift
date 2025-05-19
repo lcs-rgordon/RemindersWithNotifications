@@ -5,6 +5,7 @@
 //  Created by Russell Gordon on 2025-05-17.
 //
 
+import OSLog
 import SwiftUI
 
 struct SetReminderView: View {
@@ -19,6 +20,9 @@ struct SetReminderView: View {
     
     // Whether to be notified
     @State private var withNotification: Bool = false
+    
+    // Whether the reminder PREVIOUSLY had a notification
+    @State private var hadPriorNotification: Bool = false
     
     // Date for notification to appear
     @State private var notificationDate = Date()
@@ -56,7 +60,9 @@ struct SetReminderView: View {
                         
                         // Add reminder
                         if withNotification {
-                            
+
+                            Logger.viewCycle.info("SetReminderView: About to create NEW reminder with a notification.")
+
                             viewModel.createReminder(
                                 withTitle: title,
                                 notification: Notification(
@@ -66,6 +72,9 @@ struct SetReminderView: View {
                             )
 
                         } else {
+
+                            Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
+
                             viewModel.createReminder(withTitle: title)
                         }
                         
@@ -78,15 +87,42 @@ struct SetReminderView: View {
                         // Save the changes to the existing reminder
                         reminder!.title = title
                         
+                        Logger.viewCycle.info("SetReminderView: Updating existing reminder.")
+                        
                         // TODO: Handle updating notifications
                         // 1. Could have not had notification, now it does
                         // 2. Could be editing existing notification
                         // 3. Could be removing existing notification
+                        if !hadPriorNotification {
+                            
+                            Logger.viewCycle.info("SetReminderView: Existing reminder did NOT previously have a notification.")
+                            
+                            // 1. Adding new notification
+                            Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
+
+                        } else {
+                            
+                            Logger.viewCycle.info("SetReminderView: Existing reminder previously had a notification.")
+
+                            if withNotification {
+                                
+                                // 2. Editing existing notification
+                                Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
+
+                            } else {
+
+                                // 3. Removing existing notification
+                                Logger.viewCycle.info("SetReminderView: We are removing notification.")
+                                
+                            }
+                            
+                        }
                         
                     }
                     
                 }
                 .buttonStyle(.borderedProminent)
+                // Don't allow reminder to be saved or added when it is empty
                 .disabled(
                     title
                         .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -98,6 +134,7 @@ struct SetReminderView: View {
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
+                        Logger.viewCycle.info("SetReminderView: Closing sheet ('Done' was pressed).")
                         showSheet = false
                         reminder = nil
                     } label: {
@@ -109,17 +146,23 @@ struct SetReminderView: View {
             }
             .onAppear {
                 // Populate sheet with existing reminder if one was supplied
+                Logger.viewCycle.info("SetReminderView: View is appearing.")
                 if let currentReminder = reminder {
+                    Logger.viewCycle.info("SetReminderView: Existing reminder is being edited.")
                     editingExistingReminder = true
                     title = currentReminder.title
                     notification = currentReminder.notification
                     if let notification = notification {
+                        Logger.viewCycle.info("SetReminderView: Existing reminder had a notification scheduled.")
                         withNotification = true
-                        notificationDate = currentReminder.notification.scheduledFor
+                        hadPriorNotification = true
+                        notificationDate = notification.scheduledFor
                     } else {
-                        withNotification = false
+                        Logger.viewCycle.info("SetReminderView: Existing reminder did not have a notification.")
                         notificationDate = Date()
                     }
+                } else {
+                    Logger.viewCycle.info("SetReminderView: New reminder will be created.")
                 }
             }
         }

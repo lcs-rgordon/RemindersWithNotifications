@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 @Observable @MainActor
 class RemindersListViewModel {
@@ -18,6 +19,7 @@ class RemindersListViewModel {
     // MARK: Initializer(s)
     init(reminders: [Reminder] = exampleItems) {
         self.reminders = reminders
+        Logger.data.info("RemindersListViewModel: Initalizer has completed.")
     }
     
     // MARK: Functions
@@ -32,9 +34,11 @@ class RemindersListViewModel {
             notification: notification
         )
         
-        debugPrint(newReminder.notification?.scheduledFor.formatted())
+        Logger.data.info("RemindersListViewModel: Created new reminder (\(newReminder.title)) \(newReminder.notificationSet ? "WITH" : "WITHOUT") a notification set.")
         
         self.reminders.append(newReminder)
+
+        Logger.data.info("RemindersListViewModel: Added new reminder to list of reminders.")
 
     }
     

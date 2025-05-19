@@ -5,6 +5,7 @@
 //  Created by Russell Gordon on 2025-05-17.
 //
 
+import OSLog
 import SwiftUI
 
 struct ReminderView: View {
@@ -30,6 +31,7 @@ struct ReminderView: View {
                     Image(systemName: reminder.done == true ? "checkmark.circle" : "circle")
                         // Tap to mark as done
                         .onTapGesture {
+                            Logger.viewCycle.info("ReminderView: Toggling completion status for reminder with id \(reminder.id).")
                             reminder.done.toggle()
                         }
                 }
@@ -38,6 +40,7 @@ struct ReminderView: View {
             Image(systemName: reminder.notificationSet ? "bell.fill" : "bell.slash")
                 .foregroundStyle(reminder.notificationSet ? .yellow : .gray)
                 .onTapGesture {
+                    Logger.viewCycle.info("ReminderView: Showing sheet to set notification details for reminder with id \(reminder.id).")
                     selectedReminder = reminder
                     presentingSheet = true
                 }

@@ -5,6 +5,7 @@
 //  Created by Russell Gordon on 2025-05-17.
 //
 
+import OSLog
 import SwiftUI
 
 struct RemindersListView: View {
@@ -61,13 +62,14 @@ struct RemindersListView: View {
                 )
                 // The word "detent" means to hold something in place
                 // Here we ask for the size of the sheet to take up
-                // 15% of the height of the existing window
+                // 35% of the height of the existing window
                     .presentationDetents([.fraction(0.35)])
             }
             // Show a button to allow new to-do items to be added
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
+                        Logger.viewCycle.info("RemindersListView: Toggling completion status for reminder.")
                         presentingSheet = true
                     } label: {
                         Image(systemName: "plus")
