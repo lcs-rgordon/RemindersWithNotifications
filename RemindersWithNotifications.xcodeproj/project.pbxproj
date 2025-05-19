@@ -16,7 +16,6 @@
 		81DE69D92DD89EC300315C5A /* ReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE69D82DD89EC300315C5A /* ReminderView.swift */; };
 		81DE69DB2DD89FEC00315C5A /* SetReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE69DA2DD89FEC00315C5A /* SetReminderView.swift */; };
 		81DE69DF2DDB545100315C5A /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE69DE2DDB545100315C5A /* Logger.swift */; };
-		81DE69E42DDB5DD500315C5A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE69E32DDB5DCF00315C5A /* NotificationController.swift */; };
 		81DE69E62DDB971400315C5A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DE69E52DDB971400315C5A /* Notification.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,7 +30,6 @@
 		81DE69D82DD89EC300315C5A /* ReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderView.swift; sourceTree = "<group>"; };
 		81DE69DA2DD89FEC00315C5A /* SetReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetReminderView.swift; sourceTree = "<group>"; };
 		81DE69DE2DDB545100315C5A /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		81DE69E32DDB5DCF00315C5A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		81DE69E52DDB971400315C5A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				81DE69CB2DD89B1400315C5A /* RemindersWithNotificationsApp.swift */,
-				81DE69E22DDB5DC600315C5A /* Controllers */,
 				81DE69DD2DDB544900315C5A /* Logging */,
 				81DE69D12DD89B1A00315C5A /* Model */,
 				81DE69D22DD89B2100315C5A /* ViewModels */,
@@ -126,14 +123,6 @@
 				81DE69DE2DDB545100315C5A /* Logger.swift */,
 			);
 			path = Logging;
-			sourceTree = "<group>";
-		};
-		81DE69E22DDB5DC600315C5A /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				81DE69E32DDB5DCF00315C5A /* NotificationController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,7 +201,6 @@
 				81DE69DB2DD89FEC00315C5A /* SetReminderView.swift in Sources */,
 				81DE69D72DD89D0F00315C5A /* RemindersListViewModel.swift in Sources */,
 				81DE69E62DDB971400315C5A /* Notification.swift in Sources */,
-				81DE69E42DDB5DD500315C5A /* NotificationController.swift in Sources */,
 				81DE69DF2DDB545100315C5A /* Logger.swift in Sources */,
 				81DE69CF2DD89B1400315C5A /* RemindersListView.swift in Sources */,
 				81DE69D52DD89B6800315C5A /* Reminder.swift in Sources */,
