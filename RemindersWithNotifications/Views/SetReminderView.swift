@@ -12,6 +12,9 @@ struct SetReminderView: View {
     
     // MARK: Stored properties
     
+    // Access the controller that handles adding, editing, or removing notifications
+    @Environment(NotificationController.self) var notificationContoller
+    
     // The reminder sent for editing
     @Binding var reminder: Reminder?
     
@@ -35,6 +38,13 @@ struct SetReminderView: View {
     
     // Whether we are editing an existing reminder
     @State private var editingExistingReminder = false
+    
+    // Determines whether an error message displaying a problem creating
+    // a notification is showing or not
+    @State private var showingNotificationsError = false
+    
+    // Showing the app’s settings is logic that’s best left out of our view’s body. So, add this new property to get access to opening URLs:
+    @Environment(\.openURL) var openURL
     
     // Binding to control whether this sheet
     @Binding var showSheet: Bool
@@ -80,6 +90,14 @@ struct SetReminderView: View {
                     
                 }
             }
+            .alert("Oops!", isPresented: $showingNotificationsError) {
+                Button("Check Settings", action: showAppSettings)
+                Button("Cancel", role: .cancel) {
+                    // Does nothing right now
+                }
+            } message: {
+                Text("There was a problem creating a notification for this reminder. Please check that you have allowed notifications from this app.")
+            }
             .onAppear {
                 // Populate sheet with existing reminder if one was supplied
                 Logger.viewCycle.info("SetReminderView: View is appearing.")
@@ -89,7 +107,7 @@ struct SetReminderView: View {
                     title = currentReminder.title
                     notification = currentReminder.notification
                     if let notification = notification {
-                        Logger.viewCycle.info("SetReminderView: Existing reminder had a notification scheduled.")
+                        Logger.viewCycle.info("SetReminderView: Existing reminder has a notification scheduled.")
                         withNotification = true
                         hadPriorNotification = true
                         notificationDate = notification.scheduledFor
@@ -115,22 +133,29 @@ struct SetReminderView: View {
 
                 Logger.viewCycle.info("SetReminderView: About to create NEW reminder with a notification.")
 
-                viewModel.createReminder(
+                let newlyCreatedReminder = viewModel.createReminder(
                     withTitle: title,
                     andNotificationAt: notificationDate
                 )
+                
+                Logger.viewCycle.info("SetReminderView: New reminder created, now about to try scheduling its notification.")
+                
+                // Try to create the notification for this reminder
+                updateNotificationFor(existingReminder: newlyCreatedReminder)
 
             } else {
 
                 Logger.viewCycle.info("SetReminderView: About to create NEW reminder without a notification.")
 
-                viewModel.createReminder(withTitle: title)
+                let _ = viewModel.createReminder(withTitle: title)
+
             }
             
             // Reset input fields
             title = ""
             withNotification = false
             notificationDate = Date()
+            
         } else {
             
             // Save the changes to the existing reminder's title
@@ -148,6 +173,8 @@ struct SetReminderView: View {
                 
                 // 1. Adding new notification
                 Logger.viewCycle.info("SetReminderView: About to schedule NEW notification.")
+                reminder!.notification = Notification(id: UUID(), scheduledFor: notificationDate)
+                updateNotificationFor(existingReminder: reminder!)
 
             } else {
                 
@@ -157,16 +184,53 @@ struct SetReminderView: View {
                     
                     // 2. Editing existing notification
                     Logger.viewCycle.info("SetReminderView: We are editing details of existing notification.")
+                    updateNotificationFor(existingReminder: reminder!)
 
                 } else {
 
                     // 3. Removing existing notification
                     Logger.viewCycle.info("SetReminderView: We are removing notification.")
                     
+                    // First remove any notification(s) that exist for this reminder
+                    notificationContoller.removeNotifications(for: reminder!)
+                    reminder!.notification = nil
+
                 }
                 
             }
             
+        }
+
+    }
+    
+    func showAppSettings() {
+        guard let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString) else {
+            return
+        }
+        
+        openURL(settingsURL)
+    }
+    
+    func updateNotificationFor(existingReminder: Reminder) {
+        
+        // First remove any notification(s) that exist for this reminder
+        notificationContoller.removeNotifications(for: existingReminder)
+        
+        // Try to create the notification for this reminder
+        Task {
+            
+            let success = await notificationContoller.addNotification(for: existingReminder)
+            
+            if success {
+                Logger.viewCycle.info("SetReminderView: Successfully updated notification.")
+                existingReminder.notification!.successfullyCreated = true
+                showingNotificationsError = false
+            } else {
+                Logger.viewCycle.info("SetReminderView: Unable to update notification.")
+                existingReminder.notification!.successfullyCreated = false
+                showingNotificationsError = true
+            }
+
         }
 
     }
@@ -194,6 +258,8 @@ struct SetReminderView: View {
                 .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
+                // Add instance of the notification controller class to the environment
+                .environment(NotificationController())
 
         }
 }
@@ -223,6 +289,8 @@ struct SetReminderView: View {
                 .presentationDetents([.fraction(0.35), .medium])
                 // Add instance of view model to the environment
                 .environment(RemindersListViewModel())
+                // Add instance of the notification controller class to the environment
+                .environment(NotificationController())
 
         }
 }

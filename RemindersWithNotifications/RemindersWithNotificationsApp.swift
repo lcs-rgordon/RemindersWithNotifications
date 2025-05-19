@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct RemindersWithNotificationsApp: App {
+    
+    // MARK: Stored properties
+    @State private var notificationController = NotificationController()
+    
+    // MARK: Computed properties
     var body: some Scene {
         WindowGroup {
             RemindersListView()
+                .environment(notificationController)
         }
     }
 }

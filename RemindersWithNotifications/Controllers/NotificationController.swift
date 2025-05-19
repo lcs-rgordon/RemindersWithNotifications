@@ -13,7 +13,8 @@ import UserNotifications
 
 /// Handles creation of new notifications, edits to existing ones, or removals of a notification
 /// A single instance of this class will be shared through the environment for use throughout the app
-class NotificationController {
+@Observable
+class NotificationController: Observable {
     
     func addNotification(for reminder: Reminder) async -> Bool {
     
@@ -109,7 +110,7 @@ class NotificationController {
         // 4. Create the request
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         
-        // 5. Now send the reauest to add the notification off to iOS
+        // 5. Now send the request to add the notification off to iOS
         return try await center.add(request)
         
     }

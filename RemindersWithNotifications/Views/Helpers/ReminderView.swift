@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ReminderView: View {
     
+    // MARK: Stored properties
+    
     // Holds a reference to the current reminder
     @Binding var reminder: Reminder
     
@@ -21,6 +23,31 @@ struct ReminderView: View {
 
     // Access the view model through the environment
     @Environment(RemindersListViewModel.self) var viewModel
+    
+    // MARK: Computed properties
+    var notificationIconName: String {
+        if reminder.notificationSet {
+            if reminder.notification!.successfullyCreated {
+                return "bell.fill"
+            } else {
+                return "bell.slash.circle.fill"
+            }
+        } else {
+            return "bell.slash"
+        }
+    }
+    
+    var notificationColor: Color {
+        if reminder.notificationSet {
+            if reminder.notification!.successfullyCreated {
+                return .yellow
+            } else {
+                return .red
+            }
+        } else {
+            return .gray
+        }
+    }
     
     var body: some View {
         HStack {
@@ -37,8 +64,8 @@ struct ReminderView: View {
                 }
             )
             
-            Image(systemName: reminder.notificationSet ? "bell.fill" : "bell.slash")
-                .foregroundStyle(reminder.notificationSet ? .yellow : .gray)
+            Image(systemName: notificationIconName)
+                .foregroundStyle(notificationColor)
                 .onTapGesture {
                     Logger.viewCycle.info("ReminderView: Showing sheet to set notification details for reminder with id \(reminder.id).")
                     selectedReminder = reminder

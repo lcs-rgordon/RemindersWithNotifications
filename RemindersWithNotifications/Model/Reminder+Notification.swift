@@ -43,16 +43,30 @@ class Reminder: Identifiable, Hashable, Equatable {
     }
 }
 
-struct Notification: Identifiable, Hashable, Equatable {
+@Observable
+class Notification: Identifiable, Hashable, Equatable {
     
     // MARK: Stored properties
     var id: UUID
     var scheduledFor: Date
+    var successfullyCreated: Bool = false
+    
+    // MARK: Initializer(s)
+    init(id: UUID, scheduledFor: Date, successfullyCreated: Bool = false) {
+        self.id = id
+        self.scheduledFor = scheduledFor
+        self.successfullyCreated = successfullyCreated
+    }
     
     // MARK: Function(s)
     static func == (lhs: Notification, rhs: Notification) -> Bool {
         lhs.id == rhs.id
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
 
 }
 

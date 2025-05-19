@@ -23,7 +23,7 @@ class RemindersListViewModel {
     }
     
     // MARK: Functions
-    func createReminder(withTitle title: String, andNotificationAt providedDateAndTime: Date? = nil) {
+    func createReminder(withTitle title: String, andNotificationAt providedDateAndTime: Date? = nil) -> Reminder {
         
         // Create the new to-do item instance
         // NOTE: The id will be nil for now
@@ -39,6 +39,8 @@ class RemindersListViewModel {
         self.reminders.append(newReminder)
 
         Logger.data.info("RemindersListViewModel: Added new reminder to list of reminders.")
+        
+        return newReminder
 
     }
     
