@@ -14,12 +14,18 @@ struct SetReminderView: View {
     
     // Access the view model through the environment
     @Environment(RemindersListViewModel.self) var viewModel
+    
+    // Binding to control whether this sheet is visible or not
+    @Binding var showSheet: Bool
         
     // The reminder sent for editing (occurs when user clicks the notification bell)
     @Binding var reminder: Reminder?
     
     // The reminder's title
     @State private var title = ""
+    
+    // Whether we are editing an existing reminder
+    @State private var editingExistingReminder = false
     
     // Whether user has asked for a notification to go along with this reminder
     @State private var withNotification: Bool = false
@@ -33,18 +39,12 @@ struct SetReminderView: View {
     // Access the controller that handles adding, editing, or removing notifications
     @Environment(NotificationController.self) var notificationContoller
     
-    // Whether we are editing an existing reminder
-    @State private var editingExistingReminder = false
-    
     // Determines whether an error message displaying a problem creating
     // a notification is showing or not
     @State private var showingNotificationsError = false
     
     // Makes it possible to open the Settings page for this app to allow user to enable notifications, if necessary
     @Environment(\.openURL) var openURL
-    
-    // Binding to control whether this sheet is visible or not
-    @Binding var showSheet: Bool
     
     // MARK: Computed properties
     var body: some View {
@@ -252,8 +252,8 @@ struct SetReminderView: View {
         }
         .sheet(isPresented: $presentingNewReminderSheet) {
             SetReminderView(
-                reminder: $currentReminder,
-                showSheet: $presentingNewReminderSheet
+                showSheet: $presentingNewReminderSheet,
+                reminder: $currentReminder
             )
                 // Control size of the sheet when it slides up
                 .presentationDetents([.fraction(0.35), .medium])
@@ -282,8 +282,8 @@ struct SetReminderView: View {
         }
         .sheet(isPresented: $presentingNewReminderSheet) {
             SetReminderView(
-                reminder: $currentReminder,
-                showSheet: $presentingNewReminderSheet
+                showSheet: $presentingNewReminderSheet,
+                reminder: $currentReminder
             )
                 // Control size of the sheet when it slides up
                 .presentationDetents([.fraction(0.35), .medium])
